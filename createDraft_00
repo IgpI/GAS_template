@@ -1,0 +1,20 @@
+function myFunction() {
+  //input valiable for creating GmailDraft
+  var mail_content_From = "[mail address of sender]"
+  var mail_content_Name = "[name of sender]"
+  var mail_content_To = "[mail address of destination]"
+  var mail_content_Cc = "[mail address of cc]"
+  var mail_content_Bcc = "[mail address of bcc]"
+  var mail_content_Subject = "content of subject"
+  var mail_content_Body = "content(html format)"
+  var mail_content_Options = {
+                              from:mail_content_From,
+                              name:mail_content_Name,
+                              cc:mail_content_Cc,
+                              bcc:mail_content_Bcc,
+                              htmlBody:mail_content_Body
+                             }
+  //create Gmail Draft
+  GmailApp.createDraft(mail_content_To,mail_content_Subject,mail_content_Body,mail_content_Options)
+
+}
