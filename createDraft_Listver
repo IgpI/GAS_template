@@ -1,0 +1,59 @@
+function createDraft_List() {
+  //メールテンプレート
+  let template_Book = SpreadsheetApp.openById("18GKKb_ymDOr4YLpdR8RfkE6tY2paNT2uJh5PzO-RWUA")
+  let template_Sheet = template_Book.getSheetByName("メールテンプレート")
+  let application_Sheet = template_Book.getSheetByName("申請")
+  var application_Data = application_Sheet.getDataRange().getValues()  
+  let loop_cnt_department = application_Data.length
+  Logger.log("今回の作成メール数："+ (loop_cnt_department-1) + '\n' + +"内容:"+application_Data)
+
+  //管理者一覧の情報取得
+  let accout_manger_Book = SpreadsheetApp.openById("18GKKb_ymDOr4YLpdR8RfkE6tY2paNT2uJh5PzO-RWUA")
+  let accout_manger_Sheet = accout_manger_Book.getSheetByName("管理者一覧")
+  //処理の高速化のためスプレッドシート参照回数を減少させる。配列に格納。
+  var accout_manger_Data = accout_manger_Sheet.getDataRange().getValues()
+  let loop_cnt_ref = accout_manger_Data.length
+  Logger.log("対象管理者数："+ (loop_cnt_ref-1))
+
+
+//作成メール共通部分
+  let arg_From = template_Sheet.getRange(2,1).getValue()
+  let arg_CC = template_Sheet.getRange(2,2).getValue()
+  let arg_Body = template_Sheet.getRange(2,3).getValue()
+
+//申請シートに記載された作成メール数分ループ
+for (i=1; i<loop_cnt_department ;i++){
+  var arg_To = ''
+//管理者一覧に記載された管理者数分ループ
+  for (j=1; j < loop_cnt_ref ;j++){
+    var arg_Subject = ""
+    if( application_Data[i][1] == accout_manger_Data[j][0] ){
+        arg_To = arg_To + accout_manger_Data[j][1] + ','
+    }
+  }
+  arg_To = arg_To.replace(/,$/g,'')
+  var arg_Subject = "[" + application_Data[i][0] +"]アカウント登録完了【" + application_Data[i][1] +"】"
+  Logger.log("件名:" + arg_Subject)
+  Logger.log("To:" + arg_To)
+//下書き作成
+  createDraft_00(arg_From,arg_To,arg_CC,arg_Subject,arg_Body)
+}
+}
+
+
+
+function createDraft_00(arg_From,arg_To,arg_CC,arg_Subject,arg_Body){
+  var mail_content_From = arg_From
+  var mail_content_To = arg_To
+  var mail_content_Cc = arg_CC
+  var mail_content_Subject = arg_Subject
+  var mail_content_Body = arg_Body
+  var mail_content_Options = {
+                              from:mail_content_From,
+                              cc:mail_content_Cc,
+                              htmlBody:mail_content_Body
+                             }
+  //下書き生成
+  GmailApp.createDraft(mail_content_To,mail_content_Subject,mail_content_Body,mail_content_Options)
+
+}
