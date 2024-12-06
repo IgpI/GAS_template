@@ -1,0 +1,6 @@
+function doGet() {
+  /*htmlを指定*/
+  var template = 'index';
+  /*他サイトに遷移可能に設定し、HTMLをお読み込む*/
+  return HtmlService.createTemplateFromFile(template).evaluate().setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
