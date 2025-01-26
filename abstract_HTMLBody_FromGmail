@@ -1,0 +1,24 @@
+function getMail(){
+  /* 出力ファイルをおくGoogleDriveのフォルダID*/
+  var folder = DriveApp.getFolderById('');
+  /* 出力するファイル名*/
+  var filename = "";
+  /* 検索文字 ※今回はメールタイトル*/
+  var str = '';
+
+  /*Gmail.search 引数:検索文字,開始位置,取得数*/
+  var thread = GmailApp.search(str, 0, 1);
+  var msg = GmailApp.getMessagesForThreads(thread);
+  var body;
+  for(var i = 0; i < msg.length; i++){
+    body = msg[i][0].getBody();
+  }
+
+  /*保存するファイルの定義*/
+  var contentType = 'text/plain';
+  var charset = 'utf-8';
+  var blob = Utilities.newBlob('', contentType,filename).setDataFromString(body, charset);
+
+  // ファイル保存
+  folder.createFile(blob);
+}
